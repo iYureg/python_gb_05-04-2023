@@ -13,9 +13,9 @@ rand_list = [randint(-10, 10) for i in range(30)]
 
 def get_nums(small, big, array):
     res = []
-    for i in array:
-        if small <= i < big:
-            res.append(i)
+    for index in range(len(array)):
+        if small <= array[index] < big:
+            res.append(index)
     return res
 
 res_list = get_nums(min,max,rand_list)
