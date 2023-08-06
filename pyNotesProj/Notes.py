@@ -1,5 +1,9 @@
+import os
 import time
 from datetime import date
+
+
+def clear(): return os.system('cls')
 
 
 def show_menu() -> int:
@@ -16,22 +20,41 @@ def show_menu() -> int:
 
 def work_whith_notes():
     choice = show_menu()
-    notes = read_file('notes.csv')
+    notes = read_file("notes.csv", "a+")
 
-    while (choice != 6):
+    while (choice != 0):
+        choice = show_menu()
+        print("_____________")
         if choice == 1:
+            notes = read_file("notes.txt")
+            clear()
             print_result(notes)
+        elif choice == 2:
+            note_title = input("Введите заголовок заметки: ")
+            notes = read_file("notes.csv")
+            note = get_note(note_title, notes)
+            if (note):
+                clear()
+                print_note(note)
+            else:
+                clear()
+                print("Заметка не найдена")
+
         elif choice == 3:
             note = get_new_note()
             add_note(note, "notes.csv")
+            clear()
 
-        choice = show_menu()
+        elif choice == 6:
+            clear()
+            print("Завершение работы")
+            break
 
 
-def read_file(filename: str) -> list:
+def read_file(filename: str, param: str = "r") -> list:
     result = []
     fields = ['date', "title", "text"]
-    with open(filename, 'r', encoding='utf-8') as data:
+    with open(filename, param, encoding='utf-8') as data:
         for line in data:
             record = dict(zip(fields, line.strip().split('; ')))
             result.append(record)
@@ -53,8 +76,20 @@ def get_new_note():
 
 
 def add_note(note, filename):
-    with open(filename, 'a', encoding='utf-8') as data:
+    with open(filename, 'a+', encoding='utf-8') as data:
         data.write("; ".join(note) + "\n")
+
+
+def get_note(note_title, notes):
+    for note in notes:
+        for k, v in note.items():
+            if note_title.lower() == v.lower():
+                return note
+
+
+def print_note(note):
+    for k, v in note.items():
+        print(k + ": " + v)
 
 
 work_whith_notes()
