@@ -23,10 +23,11 @@ def work_whith_notes():
     notes = read_file("notes.csv", "a+")
 
     while (choice != 0):
-        choice = show_menu()
-        print("_____________")
+
+        print("___________________\n")
+
         if choice == 1:
-            notes = read_file("notes.txt")
+            notes = read_file("notes.csv", "r+")
             clear()
             print_result(notes)
         elif choice == 2:
@@ -45,10 +46,33 @@ def work_whith_notes():
             add_note(note, "notes.csv")
             clear()
 
+        elif choice == 4:
+            title = input("Введите заголовок заметки для редактирования: ")
+            notes = read_file("notes.csv")
+            note = get_note(title, notes)
+            if (note):
+                note = upd_note(title, notes)
+                update_notes(notes)
+            else:
+                clear()
+                print("Заметка не найдена")
+
+        elif choice == 5:
+            title = input("Введите заголовок заметки удаления: ")
+            notes = read_file("notes.csv")
+            delete = get_note(title, notes)
+            if (delete):
+                del_note(notes, delete)
+            else:
+                clear()
+                print("Такой заметки нет")
+
         elif choice == 6:
             clear()
             print("Завершение работы")
             break
+
+        choice = show_menu()
 
 
 def read_file(filename: str, param: str = "r") -> list:
@@ -90,6 +114,29 @@ def get_note(note_title, notes):
 def print_note(note):
     for k, v in note.items():
         print(k + ": " + v)
+
+
+def upd_note(title, data):
+    for doc in data:
+        for k, v in doc.items():
+            if title.lower() == v.lower():
+                doc['date'] = str(date.fromtimestamp(time.time()))
+                doc['title'] = input(f"Новый заголовок: ")
+                doc['text'] = input(f"Новый текст заметки: ")
+    return data
+
+
+def update_notes(data):
+    with open('notes.csv', 'w', encoding='utf-8') as file:
+        for doc in data:
+            file.write("; ".join([v for k, v in doc.items()])+"\n")
+
+
+def del_note(data, delete):
+    with open('notes.csv', 'w', encoding='utf-8') as file:
+        for doc in data:
+            if delete != doc:
+                file.write("; ".join([v for k, v in doc.items()])+"\n")
 
 
 work_whith_notes()
