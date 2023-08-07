@@ -45,6 +45,7 @@ def work_whith_notes():
             note = get_new_note()
             add_note(note, "notes.csv")
             clear()
+            print("Добавлена новая заметка")
 
         elif choice == 4:
             title = input("Введите заголовок заметки для редактирования: ")
@@ -53,6 +54,8 @@ def work_whith_notes():
             if (note):
                 note = upd_note(title, notes)
                 update_notes(notes)
+                clear()
+                print("Заметка обновлена")
             else:
                 clear()
                 print("Заметка не найдена")
@@ -63,6 +66,8 @@ def work_whith_notes():
             delete = get_note(title, notes)
             if (delete):
                 del_note(notes, delete)
+                clear()
+                print("Заметка удалена")
             else:
                 clear()
                 print("Такой заметки нет")
